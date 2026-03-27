@@ -1,54 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <title>FastAPI Data Viewer</title>
 </head>
 <body>
 
-<h2>Product Dashboard</h2>
+<h2>User Data</h2>
 
-<button onclick="loadProducts()">Load Products</button>
+<button onclick="loadData()">Display Data</button>
 <button onclick="triggerBot()">Trigger Bot</button>
 
-<table border="1" id="table">
+<table border="1" id="dataTable">
     <thead>
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>Price</th>
+            <th>Email</th>
+            <th>Password</th>
         </tr>
     </thead>
     <tbody></tbody>
 </table>
 
 <script>
-const API_BASE = "https://test-api-badgdccvcnfyd7gb.centralindia-01.azurewebsites.net";
+    // ✅ Base URL (change this once when deploying)
+    const BASE_URL = "https://learningfastapi-h8mj.onrender.com";
 
-function loadProducts() {
-    fetch(`${API_BASE}/products`)
-        .then(res => res.json())
-        .then(data => {
-            const tbody = document.querySelector("#table tbody");
-            tbody.innerHTML = "";
+    async function loadData() {
+        try {
+            const response = await fetch(`${BASE_URL}/seller`);
+            const data = await response.json();
 
-            data.forEach(item => {
-                const row = `<tr>
-                    <td>${item.id}</td>
-                    <td>${item.name}</td>
-                    <td>${item.price}</td>
-                </tr>`;
-                tbody.innerHTML += row;
+            const tableBody = document.querySelector("#dataTable tbody");
+            tableBody.innerHTML = "";
+
+            data.forEach(user => {
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${user.password}</td>
+                    </tr>
+                `;
             });
-        });
-}
 
-function triggerBot() {
-    fetch(`${API_BASE}/trigger-bot`, {
-        method: "POST"
-    })
-    .then(res => res.json())
-    .then(data => alert(data.status));
-}
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function triggerBot() {
+        try {
+            const response = await fetch(`${BASE_URL}/bot`);
+            const result = await response.json();
+
+            alert(result.message);
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
 </script>
 
 </body>
