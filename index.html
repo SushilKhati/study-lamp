@@ -29,7 +29,7 @@
 
     async function loadData() {
         try {
-            const response = await fetch(`${BASE_URL}/seller`);
+            const response = await fetch(`${BASE_URL}/seller/`);
             const data = await response.json();
 
             const tableBody = document.querySelector("#dataTable tbody");
